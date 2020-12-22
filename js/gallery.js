@@ -16,12 +16,12 @@ import images from '../gallery-items.js';
 
 // Находим элементы в DOM
 const galleryRef = document.querySelector('.js-gallery');
+const backdropRef = document.querySelector('.js-lightbox');
+const overlayRef = document.querySelector('.lightbox__overlay');
 const modalImgRef = document.querySelector('.lightbox__image');
 const closeModalBtn = document.querySelector(
   'button[data-action="close-lightbox"]',
 );
-const backdropRef = document.querySelector('.js-lightbox');
-const overlayRef = document.querySelector('.lightbox__overlay');
 
 // Добавляем слушателей событий
 galleryRef.addEventListener('click', onGalleryClick);
@@ -41,9 +41,13 @@ const createGallery = slide => {
   image.classList.add('gallery__image');
   image.src = slide.preview;
   image.alt = slide.description;
+  image.title = slide.description;
+  image.loading = 'lazy';
   image.dataset.source = slide.original;
+
   link.append(image);
   item.append(link);
+
   return item;
 };
 
@@ -58,14 +62,11 @@ function onGalleryClick(event) {
     return;
   }
 
-  console.log(event.target.dataset.source);
-
   setLargeImage(event);
-
   onOpenModal();
 }
 
-// При клике подменяем ссылку на большую картинку и alt
+// При клике подменяем ссылку на большую картинку и меняем alt
 function setLargeImage(event) {
   modalImgRef.src = event.target.dataset.source;
   modalImgRef.alt = event.target.alt;
@@ -75,13 +76,15 @@ function setLargeImage(event) {
 function onOpenModal() {
   window.addEventListener('keydown', onPressEscape);
   backdropRef.classList.add('is-open');
+  document.body.style.overflow = 'hidden'; // Найти не инлайновый вариант
 }
 
 // Закрываем модальное окно
 function onCloseModal() {
   window.removeEventListener('keydown', onPressEscape);
   modalImgRef.src = '';
-  modalImgRef.alt = '';
+  modalImgRef.alt = '';  
+  document.body.style.overflow = ''; // Найти не инлайновый вариант
   backdropRef.classList.remove('is-open');
 }
 
@@ -92,9 +95,11 @@ function onBackDropClick(event) {
   }
 }
 
-// Закрываем при нажатии Escape
+// Закрываем при нажатии на Escape
 function onPressEscape(event) {
   if (event.code === 'Escape') {
     onCloseModal();
   }
 }
+
+// Перелистывание слайдов кнопками
