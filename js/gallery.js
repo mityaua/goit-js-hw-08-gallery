@@ -1,6 +1,16 @@
 // https://github.com/goitacademy/javascript-homework/tree/master/homework-08
 // Создание и рендер разметки по массиву данных и предоставленному шаблону.
 // Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
+// Открытие модального окна по клику на элементе галереи.
+// Подмена значения атрибута src элемента img.lightbox__image.
+// Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"].
+// Очистка значения атрибута src элемента img.lightbox__image. Это необходимо для того, чтобы при следующем открытии модального окна, пока грузится изображение, мы не видели предыдущее.
+
+// Следующий функционал не обязателен при сдаче задания, но будет хорошей практикой по работе с событиями.
+
+// Закрытие модального окна по клику на div.lightbox__overlay.
+// Закрытие модального окна по нажатию клавиши ESC.
+// Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
 
 import images from '../gallery-items.js';
 
@@ -64,7 +74,7 @@ function setLargeImage(event) {
 // Открываем модальное окно
 function onOpenModal() {
   window.addEventListener('keydown', onPressEscape);
-  backdropRef.classList.replace('lightbox', 'lightbox.is-open');
+  backdropRef.classList.add('is-open');
 }
 
 // Закрываем модальное окно
@@ -72,7 +82,7 @@ function onCloseModal() {
   window.removeEventListener('keydown', onPressEscape);
   modalImgRef.src = '';
   modalImgRef.alt = '';
-  backdropRef.classList.replace('lightbox.is-open', 'lightbox');
+  backdropRef.classList.remove('is-open');
 }
 
 // Закрываем при клике по бекдропу
