@@ -1,17 +1,3 @@
-// https://github.com/goitacademy/javascript-homework/tree/master/homework-08
-// Создание и рендер разметки по массиву данных и предоставленному шаблону.
-// Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
-// Открытие модального окна по клику на элементе галереи.
-// Подмена значения атрибута src элемента img.lightbox__image.
-// Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"].
-// Очистка значения атрибута src элемента img.lightbox__image. Это необходимо для того, чтобы при следующем открытии модального окна, пока грузится изображение, мы не видели предыдущее.
-
-// Следующий функционал не обязателен при сдаче задания, но будет хорошей практикой по работе с событиями.
-
-// Закрытие модального окна по клику на div.lightbox__overlay.
-// Закрытие модального окна по нажатию клавиши ESC.
-// Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
-
 import images from '../gallery-items.js';
 
 // Находим элементы в DOM
@@ -27,6 +13,8 @@ const closeModalBtn = document.querySelector(
 galleryRef.addEventListener('click', onGalleryClick);
 closeModalBtn.addEventListener('click', onCloseModal);
 backdropRef.addEventListener('click', onBackDropClick);
+
+let currentIndex;
 
 // Собираем галлерею из массива обьектов
 const createGallery = slide => {
@@ -44,6 +32,7 @@ const createGallery = slide => {
   image.title = slide.description;
   image.loading = 'lazy';
   image.dataset.source = slide.original;
+  image.dataset.index = images.indexOf(slide);
 
   link.append(image);
   item.append(link);
@@ -54,19 +43,19 @@ const createGallery = slide => {
 const imagesList = images.map(slide => createGallery(slide));
 galleryRef.append(...imagesList);
 
-// Проверяем на клик по картинке + прерываем переход по ссылке
+// Проверяем на клик по превью + прерываем переход по ссылке
 function onGalleryClick(event) {
   event.preventDefault();
+  currentIndex = Number(event.target.dataset.index);
 
   if (event.target.nodeName !== 'IMG') {
     return;
   }
-
   setLargeImage(event);
   onOpenModal();
 }
 
-// При клике подменяем ссылку на большую картинку и меняем alt
+// Подменяем картинку на оригинал и меняем alt
 function setLargeImage(event) {
   modalImgRef.src = event.target.dataset.source;
   modalImgRef.alt = event.target.alt;
@@ -75,27 +64,29 @@ function setLargeImage(event) {
 // Открываем модальное окно
 function onOpenModal() {
   window.addEventListener('keydown', onPressEscape);
-  backdropRef.classList.add('is-open');
+  window.addEventListener('keydown', keyNavigation);
   document.body.style.overflow = 'hidden'; // Найти не инлайновый вариант
+  backdropRef.classList.add('is-open');
 }
 
 // Закрываем модальное окно
 function onCloseModal() {
   window.removeEventListener('keydown', onPressEscape);
+  window.removeEventListener('keydown', keyNavigation);
   modalImgRef.src = '';
-  modalImgRef.alt = '';  
+  modalImgRef.alt = '';
   document.body.style.overflow = ''; // Найти не инлайновый вариант
   backdropRef.classList.remove('is-open');
 }
 
-// Закрываем при клике по бекдропу
+// Закрываем слайд при клике по бекдропу
 function onBackDropClick(event) {
   if (event.target === overlayRef) {
     onCloseModal();
   }
 }
 
-// Закрываем при нажатии на Escape
+// Закрываем слайд при нажатии на Escape
 function onPressEscape(event) {
   if (event.code === 'Escape') {
     onCloseModal();
@@ -103,3 +94,27 @@ function onPressEscape(event) {
 }
 
 // Перелистывание слайдов кнопками
+function keyNavigation(event) {
+  if (event.code === 'ArrowLeft') {
+    if (currentIndex > 0) {
+      modalImgRef.src = images[(currentIndex -= 1)].original;
+    }
+  }
+
+  if (event.code === 'ArrowRight') {
+    if (currentIndex < images.length - 1) {
+      modalImgRef.src = images[(currentIndex += 1)].original;
+    }
+  }
+}
+
+// Создание и рендер разметки по массиву данных и предоставленному шаблону.
+// Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
+// Открытие модального окна по клику на элементе галереи.
+// Подмена значения атрибута src элемента img.lightbox__image.
+// Закрытие модального окна по клику на кнопку button[data-action="close-lightbox"].
+// Очистка значения атрибута src элемента img.lightbox__image. Это необходимо для того, чтобы при следующем открытии модального окна, пока грузится изображение, мы не видели предыдущее.
+
+// Закрытие модального окна по клику на div.lightbox__overlay.
+// Закрытие модального окна по нажатию клавиши ESC.
+// Пролистывание изображений галереи в открытом модальном окне клавишами "влево" и "вправо".
