@@ -21,7 +21,7 @@ const closeModalBtn = document.querySelector(
   'button[data-action="close-lightbox"]',
 );
 const backdropRef = document.querySelector('.js-lightbox');
-const overlayRef = document.querySelector('lightbox__overlay');
+const overlayRef = document.querySelector('.lightbox__overlay');
 
 // Добавляем слушателей событий
 galleryRef.addEventListener('click', onGalleryClick);
@@ -87,7 +87,7 @@ function onCloseModal() {
 
 // Закрываем при клике по бекдропу
 function onBackDropClick(event) {
-  if (event.target === event.currentTarget) {
+  if (event.target === overlayRef) {
     onCloseModal();
   }
 }
