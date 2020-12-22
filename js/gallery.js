@@ -4,8 +4,19 @@
 
 import images from '../gallery-items.js';
 
+// Находим элементы в DOM
 const galleryRef = document.querySelector('.js-gallery');
 const modalImgRef = document.querySelector('.lightbox__image');
+const closeModalBtn = document.querySelector(
+  'button[data-action="close-lightbox"]',
+);
+const backdropRef = document.querySelector('.js-lightbox');
+const overlayRef = document.querySelector('lightbox__overlay');
+
+// Добавляем слушателей событий
+galleryRef.addEventListener('click', onGalleryClick);
+closeModalBtn.addEventListener('click', onCloseModal);
+backdropRef.addEventListener('click', onBackDropClick);
 
 // Собираем галлерею из массива обьектов
 const createGallery = slide => {
@@ -29,23 +40,51 @@ const createGallery = slide => {
 const imagesList = images.map(slide => createGallery(slide));
 galleryRef.append(...imagesList);
 
-galleryRef.addEventListener('click', onGalleryClick);
-
+// Проверяем на клик по картинке + прерываем переход по ссылке
 function onGalleryClick(event) {
   event.preventDefault();
 
   if (event.target.nodeName !== 'IMG') {
-    console.log('Кликнули не по картинке');
     return;
   }
 
-  // console.log(event.target.nodeName);
   console.log(event.target.dataset.source);
 
   setLargeImage(event);
+
+  onOpenModal();
 }
 
+// При клике подменяем ссылку на большую картинку и alt
 function setLargeImage(event) {
   modalImgRef.src = event.target.dataset.source;
   modalImgRef.alt = event.target.alt;
+}
+
+// Открываем модальное окно
+function onOpenModal() {
+  window.addEventListener('keydown', onPressEscape);
+  backdropRef.classList.replace('lightbox', 'lightbox.is-open');
+}
+
+// Закрываем модальное окно
+function onCloseModal() {
+  window.removeEventListener('keydown', onPressEscape);
+  modalImgRef.src = '';
+  modalImgRef.alt = '';
+  backdropRef.classList.replace('lightbox.is-open', 'lightbox');
+}
+
+// Закрываем при клике по бекдропу
+function onBackDropClick(event) {
+  if (event.target === event.currentTarget) {
+    onCloseModal();
+  }
+}
+
+// Закрываем при нажатии Escape
+function onPressEscape(event) {
+  if (event.code === 'Escape') {
+    onCloseModal();
+  }
 }
