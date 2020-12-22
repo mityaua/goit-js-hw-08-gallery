@@ -1,11 +1,13 @@
+// В процессе рефакторинга
+
 import images from '../gallery-items.js';
 
 // Находим элементы в DOM
 const galleryRef = document.querySelector('.js-gallery');
 const backdropRef = document.querySelector('.js-lightbox');
-const overlayRef = document.querySelector('.lightbox__overlay');
-const modalImgRef = document.querySelector('.lightbox__image');
-const closeModalBtn = document.querySelector(
+const overlayRef = backdropRef.querySelector('.lightbox__overlay');
+const modalImgRef = backdropRef.querySelector('.lightbox__image');
+const closeModalBtn = backdropRef.querySelector(
   'button[data-action="close-lightbox"]',
 );
 
@@ -14,6 +16,7 @@ galleryRef.addEventListener('click', onGalleryClick);
 closeModalBtn.addEventListener('click', onCloseModal);
 backdropRef.addEventListener('click', onBackDropClick);
 
+// Глобальная переменная для текущего индекса слайда
 let currentIndex;
 
 // Собираем галлерею из массива обьектов
@@ -29,8 +32,8 @@ const createGallery = slide => {
   image.classList.add('gallery__image');
   image.src = slide.preview;
   image.alt = slide.description;
-  image.title = slide.description;
-  image.loading = 'lazy';
+  image.title = slide.description; // Не обязательно
+  image.loading = 'lazy'; // Не обязательно
   image.dataset.source = slide.original;
   image.dataset.index = images.indexOf(slide);
 
@@ -46,11 +49,13 @@ galleryRef.append(...imagesList);
 // Проверяем на клик по превью + прерываем переход по ссылке
 function onGalleryClick(event) {
   event.preventDefault();
+
   currentIndex = Number(event.target.dataset.index);
 
   if (event.target.nodeName !== 'IMG') {
     return;
   }
+
   setLargeImage(event);
   onOpenModal();
 }
@@ -59,6 +64,7 @@ function onGalleryClick(event) {
 function setLargeImage(event) {
   modalImgRef.src = event.target.dataset.source;
   modalImgRef.alt = event.target.alt;
+  modalImgRef.title = event.target.alt; // Не обязательно
 }
 
 // Открываем модальное окно
@@ -93,15 +99,15 @@ function onPressEscape(event) {
   }
 }
 
-// Перелистывание слайдов кнопками
+// Перелистывание слайдов кнопками влево, вправо, ввверх, вниз
 function keyNavigation(event) {
-  if (event.code === 'ArrowLeft') {
+  if (event.code === 'ArrowLeft' || event.code === 'ArrowDown') {
     if (currentIndex > 0) {
       modalImgRef.src = images[(currentIndex -= 1)].original;
     }
   }
 
-  if (event.code === 'ArrowRight') {
+  if (event.code === 'ArrowRight' || event.code === 'ArrowUp') {
     if (currentIndex < images.length - 1) {
       modalImgRef.src = images[(currentIndex += 1)].original;
     }
