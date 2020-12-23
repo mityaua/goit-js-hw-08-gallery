@@ -1,5 +1,3 @@
-// В процессе рефакторинга
-
 import images from '../gallery-items.js';
 
 // Находим элементы в DOM
@@ -7,13 +5,13 @@ const galleryRef = document.querySelector('.js-gallery');
 const backdropRef = document.querySelector('.js-lightbox');
 const overlayRef = backdropRef.querySelector('.lightbox__overlay');
 const modalImgRef = backdropRef.querySelector('.lightbox__image');
-const closeModalBtn = backdropRef.querySelector(
+const closeModalBtnRef = backdropRef.querySelector(
   'button[data-action="close-lightbox"]',
 );
 
 // Добавляем слушателей событий
 galleryRef.addEventListener('click', onGalleryClick);
-closeModalBtn.addEventListener('click', onCloseModal);
+closeModalBtnRef.addEventListener('click', onCloseModal);
 backdropRef.addEventListener('click', onBackDropClick);
 
 // Глобальная переменная для текущего индекса слайда
@@ -113,6 +111,30 @@ function keyNavigation(event) {
     }
   }
 }
+
+// Ленивая загрузка (после ТЗ)
+// const lazyImages = document.querySelectorAll('.gallery__image');
+
+// const lazyLoad = target => {
+//   const io = new IntersectionObserver((entries, observer) => {
+//     entries.forEach(entry => {
+//       if (entry.isIntersecting) {
+//         console.log(entry.target.src);
+
+//         const image = entry.target;
+//         const src = entry.target.src;
+
+//         image.src = src;
+
+//         observer.disconnect();
+//       }
+//     });
+//   });
+
+//   io.observe(target);
+// };
+
+// lazyImages.forEach(image => lazyLoad(image));
 
 // Создание и рендер разметки по массиву данных и предоставленному шаблону.
 // Реализация делегирования на галерее ul.js-gallery и получение url большого изображения.
