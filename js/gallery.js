@@ -235,6 +235,10 @@ const trottledCallback = _.throttle(event => {
 const lazyImages = document.querySelectorAll('.gallery__image');
 
 const lazyLoad = target => {
+  const options = {
+    rootMargin: '150px',
+  };
+
   const io = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
@@ -246,7 +250,7 @@ const lazyLoad = target => {
         observer.disconnect();
       }
     });
-  });
+  }, options);
 
   io.observe(target);
 };
