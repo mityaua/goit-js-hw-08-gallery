@@ -112,6 +112,21 @@ function keyNavigation(event) {
   }
 }
 
+// Троттлинг на переключение стрелками
+// const trottledCallback = _.throttle(event => {
+//   if (event.code === 'ArrowLeft' || event.code === 'ArrowDown') {
+//     if (currentIndex > 0) {
+//       modalImgRef.src = images[(currentIndex -= 1)].original;
+//     }
+//   }
+
+//   if (event.code === 'ArrowRight' || event.code === 'ArrowUp') {
+//     if (currentIndex < images.length - 1) {
+//       modalImgRef.src = images[(currentIndex += 1)].original;
+//     }
+//   }
+// }, 100);
+
 // Ленивая загрузка (после ТЗ)
 // const lazyImages = document.querySelectorAll('.gallery__image');
 
