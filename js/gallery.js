@@ -103,12 +103,16 @@ function keyNavigation(event) {
   if (event.code === 'ArrowLeft' || event.code === 'ArrowDown') {
     if (currentIndex > 0) {
       modalImgRef.src = images[(currentIndex -= 1)].original;
+      modalImgRef.alt = images[currentIndex].description;
+      modalImgRef.title = images[currentIndex].description;
     }
   }
 
   if (event.code === 'ArrowRight' || event.code === 'ArrowUp') {
     if (currentIndex < images.length - 1) {
       modalImgRef.src = images[(currentIndex += 1)].original;
+      modalImgRef.alt = images[currentIndex].description;
+      modalImgRef.title = images[currentIndex].description;
     }
   }
 }
@@ -264,4 +268,3 @@ function keyNavigation(event) {
 //     }
 //   }
 // }, 100);
-
