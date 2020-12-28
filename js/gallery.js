@@ -1,5 +1,5 @@
 // // Задание согласно ТЗ с доп. функционалом
-// import images from '../gallery-items.js';
+// import images from './gallery-items.js';
 
 // // Находим элементы в DOM
 // const galleryRef = document.querySelector('.js-gallery');
@@ -118,7 +118,7 @@
 // }
 
 // Рефакторинг с троттлингом и ленивой загрузкой вне ТЗ
-import images from '../gallery-items.js';
+import images from './gallery-items.js';
 
 // Находим элементы в DOM
 const galleryRef = document.querySelector('.js-gallery');
